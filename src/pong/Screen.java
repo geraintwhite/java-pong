@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.event.KeyEvent;
 
 import javax.swing.JPanel;
@@ -12,8 +13,8 @@ public class Screen extends JPanel {
 	public static final int WIDTH = 800;
 	public static final int HEIGHT = 600;
 
-	private Paddle left;
-	private Paddle right;
+	private Paddle player1;
+	private Paddle player2;
 
 	private Ball ball;
 
@@ -22,37 +23,32 @@ public class Screen extends JPanel {
 		setPreferredSize(new Dimension(WIDTH, HEIGHT));
 		setBackground(Color.BLACK);
 
-		int paddleHeight = 100;
-		int paddleWidth = 20;
+		player1 = new Paddle(false);
+		player2 = new Paddle(true);
 
-		left = new Paddle(20, HEIGHT / 2, paddleWidth, paddleHeight);
-		right = new Paddle(WIDTH - 20, HEIGHT / 2, paddleWidth, paddleHeight);
-
-		ball = new Ball(WIDTH / 2, HEIGHT / 2, 20);
+		ball = new Ball();
 	}
 
 	private void draw(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g.create();
+	    g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-		left.draw(g2d);
-		right.draw(g2d);
+		player1.draw(g2d);
+		player2.draw(g2d);
 		ball.draw(g2d);
 	}
 
 	public void tick(boolean[] keys) {
-		if (keys[KeyEvent.VK_UP]) {
-			left.moveUp();
-			right.moveDown();
-		}
+		if (keys[KeyEvent.VK_W]) player1.moveUp();
+		if (keys[KeyEvent.VK_S]) player1.moveDown();
+		if (keys[KeyEvent.VK_UP]) player2.moveUp();
+		if (keys[KeyEvent.VK_DOWN]) player2.moveDown();
 
-		if (keys[KeyEvent.VK_DOWN]) {
-			left.moveDown();
-			right.moveUp();
-		}
-
-		left.tick();
-		right.tick();
-		ball.tick();
+		player1.tick();
+		player2.tick();
+		ball.tick(player1, player2);
+		ball.collide(player1);
+		ball.collide(player2);
 	}
 
 	public void render() {
