@@ -35,6 +35,8 @@ public class Screen extends JPanel {
 
 		player1.draw(g2d);
 		player2.draw(g2d);
+		player1.showScore(g2d);
+		player2.showScore(g2d);
 		ball.draw(g2d);
 	}
 

@@ -1,6 +1,7 @@
 package pong;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.geom.Rectangle2D;
 
@@ -50,5 +51,11 @@ public class Paddle {
 
 	public void addPoint() {
 		score++;
+	}
+
+	public void showScore(Graphics2D g2d) {
+		g2d.setColor(Color.WHITE);
+		g2d.setFont(new Font(g2d.getFont().getFontName(), Font.PLAIN, 36));
+		g2d.drawString(String.valueOf(score), x, 50);
 	}
 }
