@@ -2,6 +2,7 @@ package pong;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -17,6 +18,7 @@ public class Screen extends JPanel {
 	private Paddle player2;
 
 	private Ball ball;
+	private boolean paused;
 
 
 	public Screen() {
@@ -27,6 +29,8 @@ public class Screen extends JPanel {
 		player2 = new Paddle(true);
 
 		ball = new Ball();
+
+		paused = true;
 	}
 
 	private void draw(Graphics g) {
@@ -38,9 +42,18 @@ public class Screen extends JPanel {
 		player1.showScore(g2d);
 		player2.showScore(g2d);
 		ball.draw(g2d);
+
+		if (paused) {
+			g2d.setColor(Color.WHITE);
+			g2d.setFont(new Font(g2d.getFont().getFontName(), Font.PLAIN, 100));
+			g2d.drawString("PAUSED", WIDTH / 2 - 200, HEIGHT / 2 + 40);
+		}
 	}
 
 	public void tick(boolean[] keys) {
+		if (keys[KeyEvent.VK_SPACE]) paused = !paused;
+		if (paused) return;
+
 		if (keys[KeyEvent.VK_W]) player1.moveUp();
 		if (keys[KeyEvent.VK_S]) player1.moveDown();
 		if (keys[KeyEvent.VK_UP]) player2.moveUp();
